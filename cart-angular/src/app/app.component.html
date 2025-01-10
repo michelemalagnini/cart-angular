@@ -1,57 +1,237 @@
-<div class="row">
-  <!-- PRODUCT LIST -->
-  <div class="col-4" *ngFor="let product of products">
-    <div class="card mb-4 shadow-sm">
-      <img [src]="product.img" width="100%" />
-      <div class="card-body">
-        <p class="card-text">{{ product.name }} - € {{ product.cost }}</p>
-
-        <!-- VARIANT LIST -->
-        <div class="d-flex mb-2">
-          <div
-            *ngFor="let variant of product.variants"
-            class="variant-box"
-            [style.background]="variant"
-            [style.border]="
-              selectedProduct?.product?.id === product.id &&
-              selectedProduct?.variant === variant
-                ? '2px solid black'
-                : null
-            "
-            (click)="selectVariant(product, variant)"
-          ></div>
+<section class="section-products">
+  <div class="container">
+    <!-- Riga per HEADER e CART -->
+    <div class="row align-items-center">
+      <!-- Colonna HEADER a sinistra -->
+      <div class="col">
+        <div class="header text-start">
+          <h3>Products</h3>
+          <h2>My shop cart </h2>
         </div>
+      </div>
+     <!-- Colonna CART a destra -->
+      <div class="col-auto ms-auto">
+        <!-- Contenitore circolare grigio per l'icona -->
+        <div class="cart-circle position-relative">
+          <!-- SVG del carrello con position relative -->
+          <svg
+            class="cart-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <!-- Badge bianco con il numero del totale -->
+          <span class="cart-badge">
+            {{ cartService.items.length }}
+          </span>
+        </div>
+      </div>
 
-        <!-- ADD TO CART -->
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-secondary"
-              [disabled]="!(selectedProduct?.product?.id === product.id)"
-              style="border-width: 2px"
-              (click)="addToCart()"
-            >
-              Add To Cart
-            </button>
+    </div>
+
+    <!-- Riga dei prodotti -->
+    <div class="row">
+      <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let product of products">
+        <div class="single-product">
+          <div class="part-1" [ngStyle]="{'background-image': 'url(' + product.img + ')'}">
+          </div>
+          <div class="part-2">
+            <h3 class="product-title">{{ product.name }}</h3>
+            <h4 class="product-old-price">€ {{ product.oldCost }}</h4>
+            <h4 class="product-price">€ {{ product.cost }}</h4>
+          </div>
+          <div class="d-flex mb-2">
+            <div
+              *ngFor="let variant of product.variants"
+              class="variant-box"
+              [style.background]="variant"
+              [style.border]="
+                selectedProduct?.product?.id === product.id &&
+                selectedProduct?.variant === variant
+                  ? '2px solid black'
+                  : null
+              "
+              (click)="selectVariant(product, variant)"
+            ></div>
+            <div class="ms-auto">
+              <button
+                (click)="addToCart()"
+                [disabled]="!(selectedProduct?.product?.id === product.id)"
+              >
+<svg
+                  class="cart-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- CART -->
 
-<div *ngIf="cart.length">
-  <h1>Cart</h1>
-
-  <div *ngFor="let item of cart">
-    <div class="d-flex gap-4">
-      <div class="variant-box" [style.background-color]="item.variant"></div>
-      <div>{{ item.product.name }}</div>
-    </div>
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let product of products">
+              <div id="product-1" class="single-product">
+                  <div class="part-1">
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">{{ product.name }}</h3>
+                      <h4 class="product-old-price">$€ {{ product.oldCost }}</h4>
+                      <h4 class="product-price">€ {{ product.cost }}</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-2" class="single-product">
+                  <div class="part-1">
+                      <span class="discount">15% off</span>
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-3" class="single-product">
+                  <div class="part-1">
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-old-price">$79.99</h4>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-4" class="single-product">
+                  <div class="part-1">
+                      <span class="new">new</span>
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-1" class="single-product">
+                  <div class="part-1">
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-old-price">$79.99</h4>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-2" class="single-product">
+                  <div class="part-1">
+                      <span class="discount">15% off</span>
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-3" class="single-product">
+                  <div class="part-1">
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-old-price">$79.99</h4>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+          <!-- Single Product -->
+          <!-- <div class="col-md-6 col-lg-4 col-xl-3">
+              <div id="product-4" class="single-product">
+                  <div class="part-1">
+                      <span class="new">new</span>
+                      <ul>
+                          <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-heart"></i></a></li>
+                          <li><a href="#"><i class="fas fa-plus"></i></a></li>
+                          <li><a href="#"><i class="fas fa-expand"></i></a></li>
+                      </ul>
+                  </div>
+                  <div class="part-2">
+                      <h3 class="product-title">Here Product Title</h3>
+                      <h4 class="product-price">$49.99</h4>
+                  </div>
+              </div>
+          </div> -->
+      <!-- </div>
   </div>
-
-  <div>Total: € {{ getTotalCart() }}</div>
-</div>
+</section> -->

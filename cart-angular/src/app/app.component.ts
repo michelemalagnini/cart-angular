@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
+import { CartService } from './components/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -6,11 +7,19 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  products: Product[] = [
+  cartService = inject(CartService);
+
+  getTotalItemsInCart = signal(0);
+  qyEffect = effect(() =>
+    console.log('last value : ', this.getTotalItemsInCart())
+  );
+
+  productSSignal = signal<Product[]>([
     {
       id: 1,
       name: 'Tshirt XYZ',
       cost: 50,
+      oldCost: 100,
       img: 'https://picsum.photos/id/237/400/300',
       variants: ['red', 'purple', 'cyan'],
     },
@@ -18,6 +27,7 @@ export class AppComponent {
       id: 2,
       name: 'Pants ABC',
       cost: 30,
+      oldCost: 130,
       img: 'https://picsum.photos/id/238/400/300',
       variants: ['red', 'lightgreen'],
     },
@@ -25,22 +35,163 @@ export class AppComponent {
       id: 3,
       name: 'Maglione XYZ',
       cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 4,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 5,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 6,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 7,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 8,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 9,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 10,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+  ]);
+  products: Product[] = [
+    {
+      id: 1,
+      name: 'Tshirt XYZ',
+      cost: 50,
+      oldCost: 100,
+      img: 'https://picsum.photos/id/237/400/300',
+      variants: ['red', 'purple', 'cyan'],
+    },
+    {
+      id: 2,
+      name: 'Pants ABC',
+      cost: 30,
+      oldCost: 130,
+      img: 'https://picsum.photos/id/238/400/300',
+      variants: ['red', 'lightgreen'],
+    },
+    {
+      id: 3,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 4,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 5,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 6,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 7,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 8,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 9,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
+      img: 'https://picsum.photos/id/239/400/300',
+      variants: ['yellow', 'orange'],
+    },
+    {
+      id: 10,
+      name: 'Maglione XYZ',
+      cost: 20,
+      oldCost: 120,
       img: 'https://picsum.photos/id/239/400/300',
       variants: ['yellow', 'orange'],
     },
   ];
 
   selectedProduct: CartItem | null = null;
+  selectedProductSignal = signal<CartItem | null>(null);
 
   cart: CartItem[] = [];
 
   selectVariant(product: Product, variant: string) {
-    console.log(product.id, variant);
     this.selectedProduct = { product, variant };
   }
 
   addToCart() {
-    if (this.selectedProduct) this.cart.push(this.selectedProduct);
+    if (this.selectedProduct) {
+      this.cartService.addToCart(this.selectedProduct);
+    }
   }
 
   getTotalCart() {
@@ -50,15 +201,16 @@ export class AppComponent {
   }
 }
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   cost: number;
+  oldCost: number;
   img: string;
   variants: string[];
 }
 
-interface CartItem {
+export interface CartItem {
   product: Product;
   variant: string;
 }
